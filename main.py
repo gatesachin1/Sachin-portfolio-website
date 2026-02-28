@@ -6,13 +6,16 @@ import os
 
 app = FastAPI(title="Sachin Gate — Portfolio")
 
-# Mount static files only if the directory exists (avoids crash on Render)
-static_dir = "static"
+# Use absolute paths so Render always finds the folders
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Mount static files only if the directory exists
+static_dir = os.path.join(BASE_DIR, "static")
 if os.path.isdir(static_dir):
     app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
-# Jinja2 templates
-templates = Jinja2Templates(directory="templates")
+# Jinja2 templates — absolute path
+templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 
 
 # ── Routes ────────────────────────────────────────────────────────────────────
@@ -38,10 +41,7 @@ async def contact(
     subject: str = Form(""),
     message: str = Form(...),
 ):
-    """
-    Handle contact form submissions.
-    Currently logs the submission — plug in SendGrid / SMTP / Slack webhook here.
-    """
+    """Handle contact form submissions."""
     print(f"[Contact Form] From: {first_name} {last_name} <{email}>")
     print(f"  Subject : {subject}")
     print(f"  Message : {message}")
