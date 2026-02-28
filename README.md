@@ -68,7 +68,7 @@ heroku open
 ## Wiring up the Contact Form (Email)
 
 The `/contact` route in `main.py` currently logs form submissions to the console.
-To actually send emails, add this to `main.py`:
+To actually send emails, add this to `main.py`:  
 
 ```python
 import smtplib
