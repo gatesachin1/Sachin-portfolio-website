@@ -6,8 +6,10 @@ import os
 
 app = FastAPI(title="Sachin Gate — Portfolio")
 
-# Mount static files (CSS, JS, images if any)
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# Mount static files only if the directory exists (avoids crash on Render)
+static_dir = "static"
+if os.path.isdir(static_dir):
+    app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 # Jinja2 templates
 templates = Jinja2Templates(directory="templates")
@@ -43,9 +45,6 @@ async def contact(
     print(f"[Contact Form] From: {first_name} {last_name} <{email}>")
     print(f"  Subject : {subject}")
     print(f"  Message : {message}")
-
-    # TODO: send an email via SendGrid / smtplib / etc.
-    # Example with smtplib is in README.md
 
     return JSONResponse({"success": True, "message": "Thanks! I'll be in touch soon."})
 
